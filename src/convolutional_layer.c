@@ -49,6 +49,17 @@ matrix im2col(image im, int size, int stride)
     matrix col = make_matrix(rows, cols);
 
     // TODO: 5.1 - fill in the column matrix
+    for (int c = 0; c < im.c; ++c){
+        for (int fidx = 0; fidx < size*size; ++fidx){
+            int dy = fidx / size - (size / 2);
+            int dx = fidx % size - (size / 2);
+            for (int outy = 0; outy < outh; ++outy){
+                for (int outx = 0; outx < outw; ++outx){
+                    col[(c*size*size) + fidx][(outy*size) + outx] = get_padded_pixel(im, (outx*stride) + dx, (outy*stride) + dy, c);
+                }
+            }
+        }
+    }
 
     return col;
 }
