@@ -35,6 +35,19 @@ void backward_convolutional_bias(matrix delta, matrix db)
     }
 }
 
+
+float get_padded_pixel(image im, int x, int y, int c)
+{
+    if(x >= im.w) return 0;
+    if(y >= im.h) return 0;
+    if(x < 0) return 0;
+    if(y < 0) return 0;
+    
+    assert(c >= 0);
+    assert(c < im.c);
+    return im.data[x + im.w*(y + im.h*c)];
+}
+
 // Make a column matrix out of an image
 // image im: image to process
 // int size: kernel size for convolution operation
@@ -55,7 +68,7 @@ matrix im2col(image im, int size, int stride)
             int dx = fidx % size - (size / 2);
             for (int outy = 0; outy < outh; ++outy){
                 for (int outx = 0; outx < outw; ++outx){
-                    col[(c*size*size) + fidx][(outy*size) + outx] = get_padded_pixel(im, (outx*stride) + dx, (outy*stride) + dy, c);
+                    col.data[(((c*size*size) + fidx) * col.cols) + (outy*size) + outx] = get_padded_pixel(im, (outx*stride) + dx, (outy*stride) + dy, c);
                 }
             }
         }
@@ -63,6 +76,7 @@ matrix im2col(image im, int size, int stride)
 
     return col;
 }
+
 
 // The reverse of im2col, add elements back into image
 // matrix col: column matrix to put back into image
