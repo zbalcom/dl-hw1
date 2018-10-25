@@ -56,13 +56,14 @@ float get_padded_pixel(image im, int x, int y, int c)
 // returns: column matrix
 matrix im2col(volatile image im, int size, int stride)
 {
+    /*
     // TEST CODE
     size = 3;
     stride = 2;
     im = make_image(7, 7, 3);
     for(int i = 0; i < im.c * im.h * im.w; i++) {
         im.data[i] = i;
-    }
+    } */
     
 
     int outw = (im.w-1)/stride + 1;
@@ -161,7 +162,7 @@ matrix forward_convolutional_layer(layer l, matrix in)
 // Run a convolutional layer backward
 // layer l: layer to run
 // matrix prev_delta: error term for the previous layer
-void backward_convolutional_layer(layer l, matrix prev_delta)
+void backward_convolutional_layer(volatile layer l, matrix prev_delta)
 {
     matrix in    = l.in[0];
     matrix out   = l.out[0];
@@ -209,6 +210,9 @@ void backward_convolutional_layer(layer l, matrix prev_delta)
 void update_convolutional_layer(layer l, float rate, float momentum, float decay)
 {
     // TODO: 5.3 Update the weights, similar to the connected layer.
+    axpy_matrix(-decay, l.w, l.dw);
+    axpy_matrix(rate, l.dw, l.w);
+    scal_matrix(momentum, l.dw);
 }
 
 // Make a new convolutional layer
