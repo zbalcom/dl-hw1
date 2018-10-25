@@ -66,9 +66,13 @@ matrix im2col(image im, int size, int stride)
         for (int fidx = 0; fidx < size*size; ++fidx){
             int dy = fidx / size - (size / 2);
             int dx = fidx % size - (size / 2);
-            for (int outy = 0; outy < outh; ++outy){
-                for (int outx = 0; outx < outw; ++outx){
-                    col.data[(((c*size*size) + fidx) * col.cols) + (outy*size) + outx] = get_padded_pixel(im, (outx*stride) + dx, (outy*stride) + dy, c);
+            for (int y = 0; y < im.h; y++) {
+                for (int x = 0; x < im.w; x++) {
+                    int outIndex = (/*row*/x + (y * im.w)) 
+                    /*column before c*/ + (cols * fidx) 
+                    /*columns after c*/ + (cols * size * size * c);
+                    float px = get_padded_pixel(im, x + dx, y + dy, c);
+                    col.data[outIndex] = px;
                 }
             }
         }
