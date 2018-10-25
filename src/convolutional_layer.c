@@ -106,7 +106,25 @@ void col2im(matrix col, int size, int stride, image im)
     int cols = outw * outh;
 
     // TODO: 5.2 - add values into image im from the column matrix
+    for (int c = 0; c < im.c; ++c){
+        for (int fidx = 0; fidx < size*size; ++fidx){
+            int dy = fidx / size - (size / 2);
+            int dx = fidx % size - (size / 2);
 
+            for (int y = 0; y < outh; y++) {
+                for (int x = 0; x < outw; x++) {
+                    int outIndex = (/*row*/x + (y * outw)) 
+                    /*column before c*/ + (cols * fidx) 
+                    /*columns after c*/ + (cols * size * size * c);
+                    int imX = (x * stride) + dx;
+                    int imY = (y * stride) + dy;
+                    if (imX > 0 && imX < im.w && imY > 0 && imY < im.h) {
+                        im.data[imX + (imY * im.w) + (im.w * im.h * c)] += col.data[outIndex];
+                    }
+                }
+            }
+        }
+    }
 }
 
 // Run a convolutional layer on input
