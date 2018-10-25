@@ -66,12 +66,13 @@ matrix im2col(image im, int size, int stride)
         for (int fidx = 0; fidx < size*size; ++fidx){
             int dy = fidx / size - (size / 2);
             int dx = fidx % size - (size / 2);
-            for (int y = 0; y < im.h; y++) {
-                for (int x = 0; x < im.w; x++) {
-                    int outIndex = (/*row*/x + (y * im.w)) 
+
+            for (int y = 0; y < outh; y++) {
+                for (int x = 0; x < outw; x++) {
+                    volatile int outIndex = (/*row*/x + (y * outw)) 
                     /*column before c*/ + (cols * fidx) 
                     /*columns after c*/ + (cols * size * size * c);
-                    float px = get_padded_pixel(im, x + dx, y + dy, c);
+                    volatile float px = get_padded_pixel(im, (x * stride) + dx, (y * stride) + dy, c);
                     col.data[outIndex] = px;
                 }
             }
