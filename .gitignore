@@ -8,6 +8,7 @@
 .fuse*
 libuwnet*
 uwnet
+mnist/
 
 # OS Generated #
 .DS_Store*

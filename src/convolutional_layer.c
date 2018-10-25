@@ -2,6 +2,7 @@
 #include <math.h>
 #include <assert.h>
 #include "uwnet.h"
+#include "image.h"
 
 // Add bias terms to a matrix
 // matrix m: partially computed output of layer
@@ -53,22 +54,44 @@ float get_padded_pixel(image im, int x, int y, int c)
 // int size: kernel size for convolution operation
 // int stride: stride for convolution
 // returns: column matrix
-matrix im2col(image im, int size, int stride)
+matrix im2col(volatile image im, int size, int stride)
 {
+    // TEST CODE
+    size = 3;
+    stride = 1;
+    im = make_image(7, 7, 3);
+    for(int i = 0; i < im.c * im.h * im.w; i++) {
+        im.data[i] = i;
+    }
+    
+
     int outw = (im.w-1)/stride + 1;
     int outh = (im.h-1)/stride + 1;
     int rows = im.c*size*size;
     int cols = outw * outh;
-    matrix col = make_matrix(rows, cols);
+    volatile matrix col = make_matrix(rows, cols);
 
     // TODO: 5.1 - fill in the column matrix
     for (int c = 0; c < im.c; ++c){
         for (int fidx = 0; fidx < size*size; ++fidx){
             int dy = fidx / size - (size / 2);
             int dx = fidx % size - (size / 2);
+            /*
             for (int outy = 0; outy < outh; ++outy){
                 for (int outx = 0; outx < outw; ++outx){
-                    col.data[(((c*size*size) + fidx) * col.cols) + (outy*size) + outx] = get_padded_pixel(im, (outx*stride) + dx, (outy*stride) + dy, c);
+                    volatile int idx = (((c*size*size) + fidx) * col.cols) + (outy*size) + outx;
+                    col.data[idx] = get_padded_pixel(im, (outx*stride) + dx, (outy*stride) + dy, c);
+                }
+            } */
+
+            // only will work for stride 1
+            for (int y = 0; y < im.h; y++) {
+                for (int x = 0; x < im.w; x++) {
+                    volatile int outIndex = (/*row*/x + (y * im.w)) 
+                    /*column before c*/ + (cols * fidx) 
+                    /*columns after c*/ + (cols * size * size * c);
+                    volatile float px = get_padded_pixel(im, x + dx, y + dy, c);
+                    col.data[outIndex] = px;
                 }
             }
         }
