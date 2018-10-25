@@ -69,10 +69,10 @@ matrix im2col(image im, int size, int stride)
 
             for (int y = 0; y < outh; y++) {
                 for (int x = 0; x < outw; x++) {
-                    volatile int outIndex = (/*row*/x + (y * outw)) 
+                    int outIndex = (/*row*/x + (y * outw)) 
                     /*column before c*/ + (cols * fidx) 
                     /*columns after c*/ + (cols * size * size * c);
-                    volatile float px = get_padded_pixel(im, (x * stride) + dx, (y * stride) + dy, c);
+                    float px = get_padded_pixel(im, (x * stride) + dx, (y * stride) + dy, c);
                     col.data[outIndex] = px;
                 }
             }
@@ -96,6 +96,24 @@ void col2im(matrix col, int size, int stride, image im)
     int cols = outw * outh;
 
     // TODO: 5.2 - add values into image im from the column matrix
+
+    for (int c = 0; c < im.c; ++c){
+        for (int fidx = 0; fidx < size*size; ++fidx){
+            int dy = fidx / size - (size / 2);
+            int dx = fidx % size - (size / 2);
+
+            for (int y = 0; y < outh; y++) {
+                for (int x = 0; x < outw; x++) {
+                    int outIndex = (/*row*/x + (y * outw)) 
+                    /*column before c*/ + (cols * fidx) 
+                    /*columns after c*/ + (cols * size * size * c);
+                    if (x + dx > 0 && x + dx < im.w && y + dy > 0 && y + dy < im.h) {
+                        im.data[x + (y * im.w) + (im.w * im.h * c)] += col.data[outIndex];
+                    }
+                }
+            }
+        }
+    }
 
 }
 
