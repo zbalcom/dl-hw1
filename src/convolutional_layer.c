@@ -58,7 +58,7 @@ matrix im2col(volatile image im, int size, int stride)
 {
     // TEST CODE
     size = 3;
-    stride = 1;
+    stride = 2;
     im = make_image(7, 7, 3);
     for(int i = 0; i < im.c * im.h * im.w; i++) {
         im.data[i] = i;
@@ -85,12 +85,12 @@ matrix im2col(volatile image im, int size, int stride)
             } */
 
             // only will work for stride 1
-            for (int y = 0; y < im.h; y++) {
-                for (int x = 0; x < im.w; x++) {
-                    volatile int outIndex = (/*row*/x + (y * im.w)) 
+            for (int y = 0; y < outh; y++) {
+                for (int x = 0; x < outw; x++) {
+                    volatile int outIndex = (/*row*/x + (y * outw)) 
                     /*column before c*/ + (cols * fidx) 
                     /*columns after c*/ + (cols * size * size * c);
-                    volatile float px = get_padded_pixel(im, x + dx, y + dy, c);
+                    volatile float px = get_padded_pixel(im, (x * stride) + dx, (y * stride) + dy, c);
                     col.data[outIndex] = px;
                 }
             }
