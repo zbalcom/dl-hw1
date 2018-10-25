@@ -76,15 +76,7 @@ matrix im2col(volatile image im, int size, int stride)
         for (int fidx = 0; fidx < size*size; ++fidx){
             int dy = fidx / size - (size / 2);
             int dx = fidx % size - (size / 2);
-            /*
-            for (int outy = 0; outy < outh; ++outy){
-                for (int outx = 0; outx < outw; ++outx){
-                    volatile int idx = (((c*size*size) + fidx) * col.cols) + (outy*size) + outx;
-                    col.data[idx] = get_padded_pixel(im, (outx*stride) + dx, (outy*stride) + dy, c);
-                }
-            } */
-
-            // only will work for stride 1
+            
             for (int y = 0; y < outh; y++) {
                 for (int x = 0; x < outw; x++) {
                     volatile int outIndex = (/*row*/x + (y * outw)) 
