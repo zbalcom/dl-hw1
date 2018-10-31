@@ -9,6 +9,7 @@
 libuwnet*
 uwnet
 mnist/
+cifar/
 
 # OS Generated #
 .DS_Store*
