@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <inttypes.h>
 #include <math.h>
 
 // int main( int argc, char* argv[] ) {
@@ -59,7 +60,7 @@
 //     print_matrix(product);
 
 // }
-
+uint64_t operations = 0;
 // Make empty matrix filled with zeros
 // int rows: number of rows in matrix
 // int cols: number of columns in matrix
@@ -126,8 +127,10 @@ matrix transpose_matrix(matrix m)
     for ( int i = 0; i < m.rows; i++ ) {
         for ( int j = 0; j < m.cols; j++ ) {
             t.data[i + (j * t.cols)] = m.data[j + (i * m.cols)];
+            operations++;
         }
     }
+    printf("Operations: %"PRIu64"\n", operations);
 
     return t;
 }
@@ -144,8 +147,10 @@ void axpy_matrix(float a, matrix x, matrix y)
     for ( int i = 0; i < x.rows; i++ ) {
         for ( int j = 0; j < x.cols; j++ ) {
             y.data[j + (i * x.cols)] += (a * x.data[j + (i * x.cols)]);
+            operations++;
         }
     }
+    printf("Operations: %"PRIu64"\n", operations);
 }
 
 // Perform matrix multiplication a*b, return result
@@ -167,6 +172,8 @@ matrix matmul(matrix a, matrix b)
         }
     }
 
+    operations += a.cols * b.cols * a.rows;
+    printf("Operations: %"PRIu64"\n", operations);
 
     return c;
 }
@@ -182,6 +189,8 @@ void scal_matrix(float s, matrix m)
             m.data[i*m.cols + j] *= s;
         }
     }
+    operations += m.cols * m.rows;
+    printf("Operations: %"PRIu64"\n", operations);
 }
 
 // Print a matrix

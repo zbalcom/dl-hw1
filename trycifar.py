@@ -31,7 +31,7 @@ def your_net():
 
 print("loading data...")
 train = load_image_classification_data("cifar/cifar.train", "cifar/cifar.labels")
-test  = load_image_classification_data("cifar/cifar.test", "cifar/cifar.labels")
+# test  = load_image_classification_data("cifar/cifar.test", "cifar/cifar.labels")
 print("done")
 print
 
@@ -48,9 +48,9 @@ train_image_classifier(m, train, batch, iters, rate, momentum, decay)
 print("done")
 print
 
-print("evaluating model...")
-print("training accuracy: %f", accuracy_net(m, train))
-print("test accuracy:     %f", accuracy_net(m, test))
+# print("evaluating model...")
+# print("training accuracy: %f", accuracy_net(m, train))
+# print("test accuracy:     %f", accuracy_net(m, test))
 
 # How accurate is the fully connected network vs the convnet when they use similar number of operations?
 # Why are you seeing these results? Speculate based on the information you've gathered and what you know about DL and ML.
