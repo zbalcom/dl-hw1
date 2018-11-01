@@ -11,7 +11,7 @@ def neural_net():
 
 def conv_net():
     # How many operations are needed for a forard pass through this network?
-    # Your answer: 
+    # Your answer: 371,200 operations
     l = [   make_convolutional_layer(32, 32, 3, 8, 3, 1, LRELU),
             make_maxpool_layer(32, 32, 8, 3, 2),
             make_convolutional_layer(16, 16, 8, 16, 3, 1, LRELU),
@@ -26,7 +26,11 @@ def conv_net():
 def your_net():
     # Define your network architecture here. It should have 5 layers. How many operations does it need for a forward pass?
     # It doesn't have to be exactly the same as conv_net but it should be close.
-    l = [   make_connected_layer(3072, 10, SOFTMAX)]
+    l = [   make_connected_layer(3072, 768, LRELU),
+            make_connected_layer(768, 768, LRELU),
+            make_connected_layer(768, 768, LRELU),
+            make_connected_layer(768, 192, LRELU),
+            make_connected_layer(3072, 10, SOFTMAX)]
     return make_net(l)
 
 print("loading data...")
