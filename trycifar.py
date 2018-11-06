@@ -30,7 +30,7 @@ def your_net():
             make_connected_layer(768, 768, LRELU),
             make_connected_layer(768, 768, LRELU),
             make_connected_layer(768, 192, LRELU),
-            make_connected_layer(3072, 10, SOFTMAX)]
+            make_connected_layer(192, 10, SOFTMAX)]
     return make_net(l)
 
 print("loading data...")
@@ -46,7 +46,7 @@ rate = .01
 momentum = .9
 decay = .005
 
-m = conv_net()
+m = your_net()
 print("training...")
 train_image_classifier(m, train, batch, iters, rate, momentum, decay)
 print("done")
@@ -59,5 +59,7 @@ print("test accuracy:     %f", accuracy_net(m, test))
 # How accurate is the fully connected network vs the convnet when they use similar number of operations?
 # Why are you seeing these results? Speculate based on the information you've gathered and what you know about DL and ML.
 # Your answer:
-#
-
+# 
+# Neither network is very accurate, but of the two, the convnet displays a higher test accuracy than the fully connected
+# network. I would expect this to be the case because a convolutional neural network can take nearby pixel information
+# into account, thereby giving it more information to use when estimating the correct classification.
